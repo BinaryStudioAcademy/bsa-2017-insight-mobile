@@ -26,7 +26,6 @@ export default class ChatList extends Component {
   // }
 
   render() {
-    console.log(conversations);
     return (
       <View style={styles.container}>
         <FlatList
@@ -36,16 +35,16 @@ export default class ChatList extends Component {
             const conversation = item.item;
             const lastMessage = conversation.messages[conversation.messages.length - 1];
             const lastMessageDate = lastMessage && new Date(lastMessage.createdAt);
-            let passedTime = lastMessage && (((Date.now() - lastMessageDate.valueOf()) / 60000).toFixed() + 'm ago');
-            if (parseInt(passedTime) > 60) {
-              passedTime = Math.round(parseInt(passedTime) / 60) + 'h ago';
-              if (parseInt(passedTime) > 24) passedTime = Math.round(parseInt(passedTime) / 24) + 'd ago';
+            let passedTime = lastMessage && (`${((Date.now() - lastMessageDate.valueOf()) / 60000).toFixed()}m ago`);
+            if (parseInt(passedTime, 10) > 60) {
+              passedTime = `${Math.round(parseInt(passedTime, 10) / 60)}h ago`;
+              if (parseInt(passedTime, 10) > 24) passedTime = `${Math.round(parseInt(passedTime, 10) / 24)}d ago`;
             }
             const avatar = lastMessage && (lastMessage.author.item.avatar === 'avatar.png' ?
               'https://www.materialist.com/static/new_store/images/avatar_placeholder.svg' :
               lastMessage.author.item.avatar);
             return (
-              <TouchableHighlight onPress={() => Actions.chat()}>
+              <TouchableHighlight onPress={() => Actions.chat({ conversationToRender: conversation })}>
                 <View style={styles.conversation}>
                   <Image source={{ uri: avatar }} style={styles.avatar} />
                   <View style={styles.authorNameWrapper}>
