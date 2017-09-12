@@ -12,11 +12,28 @@ const App = () => {
   return (
     <Router>
       <Scene key="root">
-        <Scene key="conversations-list" component={ChatList} title="Conversations List" initial/>
-        <Scene key="chat" component={Chat} title="Insight Chat"/>
+        <Scene
+          key="conversations-list"
+          component={ChatList}
+          title="Conversations List"
+          navigationBarStyle={styles.navBar}
+          titleStyle={styles.navTitle}
+          initial
+        />
+        <Scene key="chat" component={Chat} title="Insight Chat" hideNavBar />
       </Scene>
     </Router>
   );
 };
+
+const styles = StyleSheet.create({
+  navBar: {
+    height: 70,
+    backgroundColor: '#c0233d',
+  },
+  navTitle: {
+    color: '#ffffff',
+  },
+});
 
 export default App;
