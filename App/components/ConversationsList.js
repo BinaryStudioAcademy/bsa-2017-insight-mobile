@@ -36,7 +36,11 @@ export default class ChatList extends Component {
             const conversation = item.item;
             const lastMessage = conversation.messages[conversation.messages.length - 1];
             const lastMessageDate = lastMessage && new Date(lastMessage.createdAt);
-            const passedTime = lastMessage && ((Date.now() - lastMessageDate.valueOf()) / 60000).toFixed();
+            let passedTime = lastMessage && (((Date.now() - lastMessageDate.valueOf()) / 60000).toFixed() + 'm ago');
+            if (parseInt(passedTime) > 60) {
+              passedTime = Math.round(parseInt(passedTime) / 60) + 'h ago';
+              if (parseInt(passedTime) > 24) passedTime = Math.round(parseInt(passedTime) / 24) + 'd ago';
+            }
             const avatar = lastMessage && (lastMessage.author.item.avatar === 'avatar.png' ?
               'https://www.materialist.com/static/new_store/images/avatar_placeholder.svg' :
               lastMessage.author.item.avatar);
@@ -46,7 +50,7 @@ export default class ChatList extends Component {
                   <Image source={{ uri: avatar }} style={styles.avatar} />
                   <View style={styles.authorNameWrapper}>
                     <Text styles={styles.authorName}>{lastMessage.author.item.username}</Text>
-                    <Text style={styles.messageTime}>{`${passedTime}m ago`}</Text>
+                    <Text style={styles.messageTime}>{passedTime}</Text>
                     <Text style={styles.message} numberOfLines={1}>
                       {typeof lastMessage.body === 'object' ?
                         `${lastMessage.body.fileName}.${lastMessage.body.fileType}` :
