@@ -4,7 +4,6 @@ import {
   Text,
   View,
   TextInput,
-  Button,
   TouchableOpacity,
   TouchableNativeFeedback,
   Platform,

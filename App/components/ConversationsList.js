@@ -17,7 +17,7 @@ class ConversationsList extends Component {
   }
 
   static navigationOptions = {
-    headerLeft: null
+    headerLeft: null,
   };
 
   componentDidMount() {
