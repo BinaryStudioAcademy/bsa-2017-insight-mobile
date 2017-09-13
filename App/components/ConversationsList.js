@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  AsyncStorage,
   StyleSheet,
   Text,
   Image,
@@ -15,11 +16,9 @@ class ConversationsList extends Component {
   constructor(props) {
     super(props);
   }
-
   static navigationOptions = {
     headerLeft: null,
   };
-
   componentDidMount() {
     this.props.getAllConversations();
   }

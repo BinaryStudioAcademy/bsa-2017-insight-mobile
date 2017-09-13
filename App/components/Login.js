@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  AsyncStorage,
   StyleSheet,
   Text,
   View,
@@ -47,11 +48,22 @@ class Login extends Component {
       body: JSON.stringify(loginData),
       credentials: 'include',
     })
-      .then((response) => {
-        if (response.status === 200) {
-          Actions['conversations-list']();
+      .then(response => response.json())
+      .then((data) => {
+        if (data.text) {
+          this.setState({ info: data.text });
         } else {
-          this.setState({ info: 'Admin not found' });
+          const obj = {
+            appId: data.appId,
+            adminId: data._id,
+          };
+          const arrToStore = Object.entries(obj);
+          AsyncStorage.multiSet(arrToStore, (err) => {
+            console.log(err);
+          })
+            .then(() => {
+              Actions['conversations-list']();
+            });
         }
       })
       .catch(err => console.log(err));
@@ -84,8 +96,7 @@ class Login extends Component {
           </View>
         </Touchable>
         <Text style={styles.info}>{this.state.info}</Text>
-      </View>
-    );
+      </View>);
   }
 }
 
