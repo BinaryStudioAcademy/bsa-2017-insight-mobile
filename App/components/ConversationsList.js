@@ -8,7 +8,6 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import conversations from './conversations';
 
 export default class ChatList extends Component {
   constructor(props) {
@@ -17,21 +16,22 @@ export default class ChatList extends Component {
       conversations: [],
     };
   }
-
-  // componentDidMount() {
-  //   fetch('http://10.0.2.2:3000/api/conversations', {credentials: 'include' })
-  //     .then(response => response.json())
-  //     .then(data => this.setState({ conversations: data }))
-  //     .catch(err => console.log(err))
-  // }
+  static navigationOptions = {
+    headerLeft:null
+  };
+  componentDidMount() {
+    fetch('http://10.0.2.2:3000/api/conversations', {credentials: 'include' })
+      .then(response => response.json())
+      .then(data => this.setState({ conversations: data }))
+      .catch(err => console.log(err))
+  }
 
   render() {
-    console.log(conversations);
     return (
       <View style={styles.container}>
         <FlatList
           keyExtractor={item => item._id}
-          data={conversations}
+          data={this.state.conversations}
           renderItem={(item) => {
             const conversation = item.item;
             const lastMessage = conversation.messages[conversation.messages.length - 1];
@@ -41,8 +41,8 @@ export default class ChatList extends Component {
               passedTime = Math.round(parseInt(passedTime) / 60) + 'h ago';
               if (parseInt(passedTime) > 24) passedTime = Math.round(parseInt(passedTime) / 24) + 'd ago';
             }
-            const avatar = lastMessage && (lastMessage.author.item.avatar === 'avatar.png' ?
-              'https://www.materialist.com/static/new_store/images/avatar_placeholder.svg' :
+            const avatar = lastMessage && (lastMessage.author.item.avatar === 'http://localhost:3000/uploads/avatars/avatar.png' ?
+              'http://10.0.2.2:3000/uploads/avatars/avatar.png' :
               lastMessage.author.item.avatar);
             return (
               <TouchableHighlight onPress={() => Actions.chat()}>
