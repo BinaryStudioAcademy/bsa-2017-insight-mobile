@@ -7,23 +7,21 @@ import {
   FlatList,
   TouchableHighlight,
 } from 'react-native';
+import { getAllConversations } from './../actions/conversationsActions';
+import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 
-export default class ChatList extends Component {
+class ConversationsList extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      conversations: [],
-    };
   }
+
   static navigationOptions = {
-    headerLeft:null
+    headerLeft: null
   };
+
   componentDidMount() {
-    fetch('http://10.0.2.2:3000/api/conversations', {credentials: 'include' })
-      .then(response => response.json())
-      .then(data => this.setState({ conversations: data }))
-      .catch(err => console.log(err))
+    this.props.getAllConversations();
   }
 
   render() {
@@ -31,7 +29,7 @@ export default class ChatList extends Component {
       <View style={styles.container}>
         <FlatList
           keyExtractor={item => item._id}
-          data={this.state.conversations}
+          data={this.props.conversations}
           renderItem={(item) => {
             const conversation = item.item;
             const lastMessage = conversation.messages[conversation.messages.length - 1];
@@ -99,3 +97,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+const actions = {getAllConversations};
+const mapStateToProps = (state) => ({
+  conversations: state.conversations.allConversations,
+});
+
+export default connect(mapStateToProps, actions)(ConversationsList);
+
