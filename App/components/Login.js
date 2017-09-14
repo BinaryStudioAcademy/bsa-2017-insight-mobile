@@ -45,7 +45,7 @@ class Login extends Component {
         'Content-Type': 'application/json',
       },
       method: 'POST',
-      body: JSON.stringify(loginData),
+      body: JSON.stringify({ ...loginData, device: 'mobile' }),
       credentials: 'include',
     })
       .then(response => response.json())
