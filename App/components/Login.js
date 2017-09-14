@@ -40,7 +40,7 @@ class Login extends Component {
       return;
     }
 
-    fetch('http://10.0.2.2:3000/api/admin/login', {
+    fetch('http://10.0.2.2:3001/api/admin/login', {
       headers: {
         'Content-Type': 'application/json',
       },
