@@ -16,21 +16,39 @@ class Chat extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: 'Type message here...',
+      text: '',
     };
     this.onMessageInputChange = this.onMessageInputChange.bind(this);
     this.onSubmitButtonPress = this.onSubmitButtonPress.bind(this);
   }
 
-  onMessageInputChange(e) {
-    this.setState({ text: e.target.value });
+  componentDidMount() {
+    this.props.socketConnection.emit('switchRoom', this.props.conversationToRender._id);
+  }
+
+  onMessageInputChange(text) {
+    this.setState({ text });
   }
 
   onSubmitButtonPress() {
-    console.log('yeeeah');
+    const message = this.state.text;
+    if (message === '') return;
+    const messageObj = {
+      conversationId: this.props.conversationToRender._id,
+      body: message,
+      createdAt: Date.now(),
+      author: {
+        item: this.props.adminId,
+        userType: 'Admin',
+      },
+      isReceived: false,
+    };
+    this.setState({ text: '' });
+    this.props.socketConnection.emit('newMessage', messageObj);
   }
 
   render() {
+    console.log(this.props.conversationToRender);
     const user = this.props.conversationToRender ?
       this.props.conversationToRender.participants.find(participant => participant.userType === 'User') :
       null;
@@ -55,7 +73,7 @@ class Chat extends Component {
           <TextInput
             style={styles.messageInput}
             value={this.state.text}
-            onChange={this.onMessageInputChange}
+            onChangeText={this.onMessageInputChange}
           />
           <Button
             style={styles.submitButton}
@@ -120,6 +138,8 @@ Chat.propTypes = {
     open: propTypes.bool,
     createdAt: propTypes.oneOfType([propTypes.number, propTypes.string]),
   }),
+  socketConnection: propTypes.object,
+  adminId: propTypes.string,
 };
 
 export default Chat;

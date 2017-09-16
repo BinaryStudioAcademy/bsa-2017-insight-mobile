@@ -13,7 +13,8 @@
 		"react-native-router-flux": "^4.0.0-beta.21",
 		"react-redux": "^5.0.6",
 		"redux": "^3.7.2",
-		"redux-saga": "^0.15.6"
+		"redux-saga": "^0.15.6",
+		"socket.io-client": "^2.0.3"
 	},
 	"devDependencies": {
 		"babel-jest": "21.0.2",

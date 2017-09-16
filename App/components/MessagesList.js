@@ -49,8 +49,8 @@ MessagesList.propTypes = {
       isImage: propTypes.bool,
     })]).isRequired,
     author: propTypes.shape({
-      item: propTypes.any.isRequired,
-      userType: propTypes.string.isRequired,
+      item: propTypes.any,
+      userType: propTypes.string,
     }),
     createdAt: propTypes.oneOfType([propTypes.number, propTypes.string]),
     editedAt: propTypes.number,

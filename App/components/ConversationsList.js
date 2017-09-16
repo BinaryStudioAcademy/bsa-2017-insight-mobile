@@ -11,16 +11,27 @@ import {
 import { getAllConversations } from './../actions/conversationsActions';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
+import startSocketConnection from './../startSocketConnections';
 
 class ConversationsList extends Component {
   constructor(props) {
     super(props);
+    this.onConversationPress = this.onConversationPress.bind(this);
   }
   static navigationOptions = {
     headerLeft: null,
   };
   componentDidMount() {
     this.props.getAllConversations();
+    startSocketConnection.call(this, this.props.dispatch);
+  }
+
+  onConversationPress(conversationToRender) {
+    Actions.chat({
+      conversationToRender,
+      socketConnection: this.socket,
+      adminId: this.adminId,
+    })
   }
 
   render() {
@@ -42,7 +53,7 @@ class ConversationsList extends Component {
               'http://10.0.2.2:3001/uploads/avatars/avatar.png' :
               lastMessage.author.item.avatar);
             return (
-              <TouchableHighlight onPress={() => Actions.chat({ conversationToRender: conversation })}>
+              <TouchableHighlight onPress={() => this.onConversationPress(conversation)}>
                 <View style={styles.conversation}>
                   <Image source={{ uri: avatar }} style={styles.avatar} />
                   <View style={styles.authorNameWrapper}>
@@ -97,10 +108,18 @@ const styles = StyleSheet.create({
   },
 });
 
-const actions = {getAllConversations};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getAllConversations: () => {
+      return dispatch(getAllConversations());
+    },
+    dispatch,
+  }
+};
 const mapStateToProps = (state) => ({
-  conversations: state.conversations.allConversations,
+  conversations: state.conversations.conversations,
 });
 
-export default connect(mapStateToProps, actions)(ConversationsList);
+export default connect(mapStateToProps, mapDispatchToProps)(ConversationsList);
 
