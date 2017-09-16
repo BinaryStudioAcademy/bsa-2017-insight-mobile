@@ -3,7 +3,7 @@ import { AsyncStorage } from 'react-native';
 import { fetchMessage } from './actions/conversationsActions';
 
 function startSocketConnection(dispatch) {
-  this.socket = io('http://10.0.2.2:3001');
+  this.socket = io(global.insightHost);
   AsyncStorage.getItem('adminId', (err, id) => {
     if (err) {
       console.log(err);
