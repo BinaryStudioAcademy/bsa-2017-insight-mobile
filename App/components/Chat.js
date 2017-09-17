@@ -21,6 +21,7 @@ class Chat extends Component {
     super(props);
     this.state = {
       text: '',
+      isPicked: this.props.isConversationPicked,
     };
     this.onMessageInputChange = this.onMessageInputChange.bind(this);
     this.onSubmitButtonPress = this.onSubmitButtonPress.bind(this);
@@ -43,7 +44,7 @@ class Chat extends Component {
       };
       this.props.socketConnection.emit('conversationPicked', adminObj);
     });
-    fetch(`/api/conversations/pick`, {
+    fetch(`${global.insightHost}/api/conversations/pick`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -51,6 +52,12 @@ class Chat extends Component {
       credentials: 'include',
       body: JSON.stringify({ id: this.props.conversationToRender._id }),
     })
+      .then(response => response.json())
+      .then((resp) => {
+        if (resp.ok) {
+          this.setState({ isPicked: true });
+        }
+      })
       .catch(err => console.log(err));
   }
 
@@ -91,9 +98,11 @@ class Chat extends Component {
           </TouchableHighlight>
           <Image source={{ uri: avatar }} style={styles.headerAvatar} />
           <Text style={styles.username}>{userName}</Text>
-          {this.props.isConversationPicked ?
+          {this.state.isPicked ?
             <Text style={styles.pickButton}>Picked</Text> :
-            <Touchable onPress={this.onPickButtonPress}>
+            <Touchable
+              onPress={this.onPickButtonPress}
+            >
               <View style={styles.pickButton}>
                 <Text style={styles.pickButtonText}>Pick</Text>
               </View>
@@ -164,9 +173,9 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 5,
     backgroundColor: '#8f1b31',
+    color: 'white',
   },
   pickButtonText: {
-    color: 'white',
     fontSize: 16,
   },
 });
