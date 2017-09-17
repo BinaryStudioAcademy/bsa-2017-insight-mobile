@@ -13,6 +13,7 @@ import {
   AsyncStorage,
 } from 'react-native';
 import propTypes from 'prop-types';
+import { getAllConversations } from '../actions/conversationsActions';
 import { Actions } from 'react-native-router-flux';
 import MessagesList from './MessagesList';
 
@@ -26,14 +27,24 @@ class Chat extends Component {
     this.onMessageInputChange = this.onMessageInputChange.bind(this);
     this.onSubmitButtonPress = this.onSubmitButtonPress.bind(this);
     this.onPickButtonPress = this.onPickButtonPress.bind(this);
+    this.onBackButtonPress = this.onBackButtonPress.bind(this);
   }
 
   componentDidMount() {
-    this.props.socketConnection.emit('switchRoom', this.props.conversationToRender._id);
+    const conversation = this.props.conversationToRender;
+    this.props.socketConnection.emit('switchRoom', conversation._id);
+    this.props.socketConnection.emit('messagesReceived', { type: 'Admin', messages: conversation.messages });
+    this.props.dispatch(getAllConversations());
   }
 
   onMessageInputChange(text) {
     this.setState({ text });
+  }
+
+  onBackButtonPress() {
+    this.props.socketConnection.emit('switchRoom', '');
+    this.props.dispatch(getAllConversations());
+    Actions.pop();
   }
 
   onPickButtonPress() {
@@ -86,11 +97,11 @@ class Chat extends Component {
     const avatar = user && (user.user.avatar === 'http://localhost:3001/uploads/avatars/avatar.png' ?
       `${global.insightHost}/uploads/avatars/avatar.png` :
       user.user.avatar);
-    const userName = user && user.user.username;
+    const userName = user && (user.user.firstName || user.user.username);
     return (
       <View style={styles.container}>
         <View style={styles.conversationHeader}>
-          <TouchableHighlight style={styles.backButton} onPress={() => Actions.pop()} activeOpacity={5}>
+          <TouchableHighlight style={styles.backButton} onPress={this.onBackButtonPress} activeOpacity={5}>
             <Image
               source={{ uri: `${global.insightHost}/resources/widget/images/back.png` }}
               style={styles.backButtonImage}
@@ -99,7 +110,9 @@ class Chat extends Component {
           <Image source={{ uri: avatar }} style={styles.headerAvatar} />
           <Text style={styles.username}>{userName}</Text>
           {this.state.isPicked ?
-            <Text style={styles.pickButton}>Picked</Text> :
+            <View style={styles.pickButton}>
+              <Text style={styles.pickButtonText}>Picked</Text>
+            </View> :
             <Touchable
               onPress={this.onPickButtonPress}
             >
@@ -173,9 +186,9 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 5,
     backgroundColor: '#8f1b31',
-    color: 'white',
   },
   pickButtonText: {
+    color: 'white',
     fontSize: 16,
   },
 });
@@ -194,6 +207,7 @@ Chat.propTypes = {
   socketConnection: propTypes.object,
   adminId: propTypes.string,
   isConversationPicked: propTypes.bool,
+  dispatch: propTypes.func,
 };
 
 export default Chat;

@@ -43,6 +43,7 @@ class ConversationsList extends Component {
       socketConnection: this.socket,
       adminId: this.adminId,
       isConversationPicked,
+      dispatch: this.props.dispatch,
     });
   }
 

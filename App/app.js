@@ -26,7 +26,11 @@ const App = () => {
             title="Conversations List"
             hideNavBar
           />
-          <Scene key="chat" component={Chat} title="Insight Chat" hideNavBar />
+          <Scene
+            key="chat"
+            component={Chat}
+            title="Insight Chat"
+            hideNavBar />
         </Scene>
       </Router>
     </Provider>
