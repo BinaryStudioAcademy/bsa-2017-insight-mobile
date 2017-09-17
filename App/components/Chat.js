@@ -77,7 +77,7 @@ class Chat extends Component {
       this.props.conversationToRender.participants.find(participant => participant.userType === 'User') :
       null;
     const avatar = user && (user.user.avatar === 'http://localhost:3001/uploads/avatars/avatar.png' ?
-      'http://10.0.2.2:3001/uploads/avatars/avatar.png' :
+      `${global.insightHost}/uploads/avatars/avatar.png` :
       user.user.avatar);
     const userName = user && user.user.username;
     return (
@@ -85,7 +85,7 @@ class Chat extends Component {
         <View style={styles.conversationHeader}>
           <TouchableHighlight style={styles.backButton} onPress={() => Actions.pop()} activeOpacity={5}>
             <Image
-              source={{ uri: 'http://10.0.2.2:3001/resources/widget/images/back.png' }}
+              source={{ uri: `${global.insightHost}/resources/widget/images/back.png` }}
               style={styles.backButtonImage}
             />
           </TouchableHighlight>

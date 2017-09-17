@@ -10,6 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import IosInput from './IosInput';
 
 class Login extends Component {
   constructor(props) {
@@ -40,7 +41,7 @@ class Login extends Component {
       return;
     }
 
-    fetch('http://10.0.2.2:3001/api/admin/login', {
+    fetch(`${global.insightHost}/api/admin/login`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -75,23 +76,36 @@ class Login extends Component {
     const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
     return (
       <View style={styles.container}>
-        <View style={styles.input}>
-          <Text style={styles.label}>Username: </Text>
-          <TextInput
-            style={styles.textInput}
+        { Platform.OS === 'android' ?
+          (<View style={styles.input}>
+            <Text style={styles.label}>Username: </Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={text => this.onTextInputChange('username', text)}
+              value={this.state.username}
+            />
+          </View>)
+        : <IosInput
+            placeholder={'Username'}
             onChangeText={text => this.onTextInputChange('username', text)}
             value={this.state.username}
-          />
-        </View>
-        <View style={styles.input}>
-          <Text style={styles.label}>Password: </Text>
-          <TextInput
-            style={styles.textInput}
+          /> }
+        { Platform.OS === 'android' ?
+          (<View style={styles.input}>
+            <Text style={styles.label}>Password: </Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={text => this.onTextInputChange('password', text)}
+              value={this.state.password}
+              secureTextEntry
+            />
+          </View>)
+        : <IosInput
+            placeholder={'Password'}
             onChangeText={text => this.onTextInputChange('password', text)}
             value={this.state.password}
             secureTextEntry
-          />
-        </View>
+          /> }
         <Touchable onPress={this.onLoginButtonPress}>
           <View style={styles.buttonStyles}>
             <Text style={styles.buttonTextStyles}>Sign in</Text>

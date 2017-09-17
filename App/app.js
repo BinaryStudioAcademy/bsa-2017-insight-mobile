@@ -1,6 +1,6 @@
 import React from 'react';
 import { Router, Scene } from 'react-native-router-flux';
-import { StyleSheet, AsyncStorage } from 'react-native';
+import { StyleSheet, AsyncStorage, Platform } from 'react-native';
 import { Provider } from 'react-redux';
 import { store, sagaMiddleware } from './store';
 import rootSaga from './saga/rootSaga';
@@ -10,6 +10,8 @@ import Login from './components/Login';
 import SplashScreen from './components/SplashScreen';
 
 sagaMiddleware.run(rootSaga);
+
+global.insightHost = Platform.OS === 'android' ? 'http://10.0.2.2:3001' : 'http://localhost:3001';
 
 const App = () => {
   return (

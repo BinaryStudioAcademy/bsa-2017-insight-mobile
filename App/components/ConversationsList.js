@@ -52,7 +52,7 @@ class ConversationsList extends Component {
               if (parseInt(passedTime, 10) > 24) passedTime = `${Math.round(parseInt(passedTime, 10) / 24)}d ago`;
             }
             const avatar = lastMessage && (lastMessage.author.item.avatar === 'http://localhost:3001/uploads/avatars/avatar.png' ?
-              'http://10.0.2.2:3001/uploads/avatars/avatar.png' :
+              `${global.insightHost}/uploads/avatars/avatar.png` :
               lastMessage.author.item.avatar);
             return (
               <TouchableHighlight onPress={() => this.onConversationPress(conversation)}>
