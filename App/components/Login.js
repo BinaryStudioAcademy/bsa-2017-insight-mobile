@@ -56,6 +56,8 @@ class Login extends Component {
           const obj = {
             appId: data.appId,
             adminId: data._id,
+            avatar: data.avatar,
+            username: data.username,
           };
           const arrToStore = Object.entries(obj);
           AsyncStorage.multiSet(arrToStore, (err) => {

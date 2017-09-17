@@ -27,10 +27,12 @@ class ConversationsList extends Component {
   }
 
   onConversationPress(conversationToRender) {
+    const isConversationPicked = (conversationToRender.participants.filter(partic => partic.userType === 'Admin')).length > 0;
     Actions.chat({
       conversationToRender,
       socketConnection: this.socket,
       adminId: this.adminId,
+      isConversationPicked,
     })
   }
 
@@ -57,7 +59,7 @@ class ConversationsList extends Component {
                 <View style={styles.conversation}>
                   <Image source={{ uri: avatar }} style={styles.avatar} />
                   <View style={styles.authorNameWrapper}>
-                    <Text styles={styles.authorName}>{lastMessage.author.item.username}</Text>
+                    <Text style={styles.authorName}>{lastMessage.author.item.username}</Text>
                     <Text style={styles.messageTime}>{passedTime}</Text>
                     <Text style={styles.message} numberOfLines={1}>
                       {typeof lastMessage.body === 'object' ?

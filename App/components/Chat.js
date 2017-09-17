@@ -7,6 +7,10 @@ import {
   TouchableHighlight,
   TextInput,
   Button,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+  Platform,
+  AsyncStorage,
 } from 'react-native';
 import propTypes from 'prop-types';
 import { Actions } from 'react-native-router-flux';
@@ -20,6 +24,7 @@ class Chat extends Component {
     };
     this.onMessageInputChange = this.onMessageInputChange.bind(this);
     this.onSubmitButtonPress = this.onSubmitButtonPress.bind(this);
+    this.onPickButtonPress = this.onPickButtonPress.bind(this);
   }
 
   componentDidMount() {
@@ -28,6 +33,25 @@ class Chat extends Component {
 
   onMessageInputChange(text) {
     this.setState({ text });
+  }
+
+  onPickButtonPress() {
+    AsyncStorage.multiGet(['avatar', 'username'], (err, result) => {
+      const adminObj = {
+        avatar: result[0][1],
+        username: result[1][1],
+      };
+      this.props.socketConnection.emit('conversationPicked', adminObj);
+    });
+    fetch(`/api/conversations/pick`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      credentials: 'include',
+      body: JSON.stringify({ id: this.props.conversationToRender._id }),
+    })
+      .catch(err => console.log(err));
   }
 
   onSubmitButtonPress() {
@@ -48,7 +72,7 @@ class Chat extends Component {
   }
 
   render() {
-    console.log(this.props.conversationToRender);
+    const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
     const user = this.props.conversationToRender ?
       this.props.conversationToRender.participants.find(participant => participant.userType === 'User') :
       null;
@@ -67,6 +91,14 @@ class Chat extends Component {
           </TouchableHighlight>
           <Image source={{ uri: avatar }} style={styles.headerAvatar} />
           <Text style={styles.username}>{userName}</Text>
+          {this.props.isConversationPicked ?
+            <Text style={styles.pickButton}>Picked</Text> :
+            <Touchable onPress={this.onPickButtonPress}>
+              <View style={styles.pickButton}>
+                <Text style={styles.pickButtonText}>Pick</Text>
+              </View>
+            </Touchable>
+          }
         </View>
         <MessagesList messages={this.props.conversationToRender.messages} />
         <View style={styles.form}>
@@ -125,6 +157,18 @@ const styles = StyleSheet.create({
   messageInput: {
     flex: 10,
   },
+  pickButton: {
+    position: 'absolute',
+    right: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+    backgroundColor: '#8f1b31',
+  },
+  pickButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
 });
 
 Chat.propTypes = {
@@ -140,6 +184,7 @@ Chat.propTypes = {
   }),
   socketConnection: propTypes.object,
   adminId: propTypes.string,
+  isConversationPicked: propTypes.bool,
 };
 
 export default Chat;
