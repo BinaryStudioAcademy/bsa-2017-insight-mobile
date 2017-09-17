@@ -100,13 +100,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingVertical: 20,
     backgroundColor: '#c0233d',
     flexDirection: 'row',
   },
   title: {
+    marginLeft: 30,
     color: '#ffffff',
     fontSize: 18,
   },
