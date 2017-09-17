@@ -24,8 +24,7 @@ const App = () => {
             key="conversations-list"
             component={ConversationsList}
             title="Conversations List"
-            navigationBarStyle={styles.navBar}
-            titleStyle={styles.navTitle}
+            hideNavBar
           />
           <Scene key="chat" component={Chat} title="Insight Chat" hideNavBar />
         </Scene>
@@ -33,15 +32,5 @@ const App = () => {
     </Provider>
   );
 };
-
-const styles = StyleSheet.create({
-  navBar: {
-    height: 70,
-    backgroundColor: '#c0233d',
-  },
-  navTitle: {
-    color: '#ffffff',
-  },
-});
 
 export default App;

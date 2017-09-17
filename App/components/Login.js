@@ -76,7 +76,7 @@ class Login extends Component {
     const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
     return (
       <View style={styles.container}>
-        { Platform.OS === 'android' ?
+        {Platform.OS === 'android' ?
           (<View style={styles.input}>
             <Text style={styles.label}>Username: </Text>
             <TextInput
@@ -85,12 +85,12 @@ class Login extends Component {
               value={this.state.username}
             />
           </View>)
-        : <IosInput
+          : <IosInput
             placeholder={'Username'}
             onChangeText={text => this.onTextInputChange('username', text)}
             value={this.state.username}
-          /> }
-        { Platform.OS === 'android' ?
+          />}
+        {Platform.OS === 'android' ?
           (<View style={styles.input}>
             <Text style={styles.label}>Password: </Text>
             <TextInput
@@ -100,12 +100,12 @@ class Login extends Component {
               secureTextEntry
             />
           </View>)
-        : <IosInput
+          : <IosInput
             placeholder={'Password'}
             onChangeText={text => this.onTextInputChange('password', text)}
             value={this.state.password}
             secureTextEntry
-          /> }
+          />}
         <Touchable onPress={this.onLoginButtonPress}>
           <View style={styles.buttonStyles}>
             <Text style={styles.buttonTextStyles}>Sign in</Text>

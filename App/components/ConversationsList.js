@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import propTypes from 'prop-types';
 import {
   AsyncStorage,
   StyleSheet,
@@ -7,23 +8,32 @@ import {
   View,
   FlatList,
   TouchableHighlight,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+  Platform,
 } from 'react-native';
-import { getAllConversations } from './../actions/conversationsActions';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
+import { getAllConversations } from './../actions/conversationsActions';
 import startSocketConnection from './../startSocketConnections';
 
 class ConversationsList extends Component {
   constructor(props) {
     super(props);
     this.onConversationPress = this.onConversationPress.bind(this);
+    this.onLogoutButtonPress = this.onLogoutButtonPress.bind(this);
   }
-  static navigationOptions = {
-    headerLeft: null,
-  };
+
   componentDidMount() {
     this.props.getAllConversations();
     startSocketConnection.call(this, this.props.dispatch);
+  }
+
+  onLogoutButtonPress() {
+    AsyncStorage.clear(err => console.log(err));
+    fetch(`${global.insightHost}/api/admin/logout`, { credentials: 'include' })
+      .then(() => Actions.login())
+      .catch(err => console.log(err));
   }
 
   onConversationPress(conversationToRender) {
@@ -33,12 +43,21 @@ class ConversationsList extends Component {
       socketConnection: this.socket,
       adminId: this.adminId,
       isConversationPicked,
-    })
+    });
   }
 
   render() {
+    const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
     return (
       <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Conversations list</Text>
+          <Touchable onPress={this.onLogoutButtonPress}>
+            <View style={styles.logoutButton}>
+              <Text style={styles.logoutButtonText}>Logout</Text>
+            </View>
+          </Touchable>
+        </View>
         <FlatList
           keyExtractor={item => item._id}
           data={this.props.conversations}
@@ -80,6 +99,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  header: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+    backgroundColor: '#c0233d',
+    flexDirection: 'row',
+  },
+  title: {
+    color: '#ffffff',
+    fontSize: 18,
+  },
+  logoutButton: {
+    position: 'absolute',
+    right: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+    backgroundColor: '#8f1b31',
+  },
+  logoutButtonText: {
+    fontSize: 18,
+    color: '#ffffff',
+  },
   conversation: {
     flex: 1,
     flexWrap: 'wrap',
@@ -110,6 +152,20 @@ const styles = StyleSheet.create({
   },
 });
 
+ConversationsList.propTypes = {
+  dispatch: propTypes.func,
+  getAllConversations: propTypes.func,
+  conversations: propTypes.arrayOf(propTypes.shape({
+    _id: propTypes.string.isRequired,
+    participants: propTypes.arrayOf(propTypes.shape({
+      userType: propTypes.string,
+      user: propTypes.any,
+    })),
+    messages: propTypes.arrayOf(propTypes.any),
+    open: propTypes.bool,
+    createdAt: propTypes.oneOfType([propTypes.number, propTypes.string]),
+  })),
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -117,9 +173,9 @@ const mapDispatchToProps = (dispatch) => {
       return dispatch(getAllConversations());
     },
     dispatch,
-  }
+  };
 };
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   conversations: state.conversations.conversations,
 });
 
