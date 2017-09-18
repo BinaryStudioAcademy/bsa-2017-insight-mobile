@@ -16,6 +16,7 @@ import propTypes from 'prop-types';
 import { getAllConversations } from '../actions/conversationsActions';
 import { Actions } from 'react-native-router-flux';
 import MessagesList from './MessagesList';
+import UserInfoDrawer from './UserInfoDrawer';
 
 class Chat extends Component {
   constructor(props) {
@@ -99,44 +100,46 @@ class Chat extends Component {
       user.user.avatar);
     const userName = user && (user.user.firstName || user.user.username);
     return (
-      <View style={styles.container}>
-        <View style={styles.conversationHeader}>
-          <TouchableHighlight style={styles.backButton} onPress={this.onBackButtonPress} activeOpacity={5}>
-            <Image
-              source={{ uri: `${global.insightHost}/resources/widget/images/back.png` }}
-              style={styles.backButtonImage}
-            />
-          </TouchableHighlight>
-          <Image source={{ uri: avatar }} style={styles.headerAvatar} />
-          <Text style={styles.username}>{userName}</Text>
-          {this.state.isPicked ?
-            <View style={styles.pickButton}>
-              <Text style={styles.pickButtonText}>Picked</Text>
-            </View> :
-            <Touchable
-              onPress={this.onPickButtonPress}
-            >
+      <UserInfoDrawer userId={user.user._id}>
+        <View style={styles.container}>
+          <View style={styles.conversationHeader}>
+            <TouchableHighlight style={styles.backButton} onPress={this.onBackButtonPress} activeOpacity={5}>
+              <Image
+                source={{ uri: `${global.insightHost}/resources/widget/images/back.png` }}
+                style={styles.backButtonImage}
+              />
+            </TouchableHighlight>
+            <Image source={{ uri: avatar }} style={styles.headerAvatar} />
+            <Text style={styles.username}>{userName}</Text>
+            {this.state.isPicked ?
               <View style={styles.pickButton}>
-                <Text style={styles.pickButtonText}>Pick</Text>
-              </View>
-            </Touchable>
-          }
+                <Text style={styles.pickButtonText}>Picked</Text>
+              </View> :
+              <Touchable
+                onPress={this.onPickButtonPress}
+              >
+                <View style={styles.pickButton}>
+                  <Text style={styles.pickButtonText}>Pick</Text>
+                </View>
+              </Touchable>
+            }
+          </View>
+          <MessagesList messages={this.props.conversationToRender.messages} />
+          <View style={styles.form}>
+            <TextInput
+              style={styles.messageInput}
+              value={this.state.text}
+              onChangeText={this.onMessageInputChange}
+            />
+            <Button
+              style={styles.submitButton}
+              onPress={this.onSubmitButtonPress}
+              title="Submit"
+              color="#c0233d"
+            />
+          </View>
         </View>
-        <MessagesList messages={this.props.conversationToRender.messages} />
-        <View style={styles.form}>
-          <TextInput
-            style={styles.messageInput}
-            value={this.state.text}
-            onChangeText={this.onMessageInputChange}
-          />
-          <Button
-            style={styles.submitButton}
-            onPress={this.onSubmitButtonPress}
-            title="Submit"
-            color="#c0233d"
-          />
-        </View>
-      </View>
+      </UserInfoDrawer>
     );
   }
 }
