@@ -3,17 +3,16 @@ import { connect } from 'react-redux';
 import {
 	View,
 	Text,
-	StyleSheet,
-	Dimensions,
 } from 'react-native';
 import Drawer from 'react-native-drawer';
 import { getStatisticById } from '../actions/statisticActions';
+import UserInfo from './UserInfo';
 
 class UserInfoDrawer extends Component {
 	constructor() {
 		super();
 		this.state = {
-			isOpen: true,
+			isOpen: false,
 		}
 	}
 
@@ -21,25 +20,23 @@ class UserInfoDrawer extends Component {
 		this.props.getUserStatistics(this.props.userId);
 	}
 
+	componentWillReceiveProps(nextProps) {
+		console.log(nextProps);
+	}
+
 	render() {
 		return (
 			<Drawer
 			  open={this.state.isOpen}
-				openDrawerOffset={0.2}
+				openDrawerOffset={0.3}
+				closedDrawerOffset={-3}
 				side="right"
 				type="overlay"
   			tapToClose={true}
 				panOpenMask={.2}
-				styles={styles}
+				styles={drawerStyles}
 				content={
-					<View>
-						<Text>Drawer</Text>
-						<Text>Drawer</Text>
-						<Text>Drawer</Text>
-						<Text>Drawer</Text>
-						<Text>Drawer</Text>
-						<Text>Drawer</Text>
-					</View>
+					<UserInfo	statistics={this.props.userInfo} />
 				}
 			>
 				{this.props.children}
@@ -48,16 +45,13 @@ class UserInfoDrawer extends Component {
 	}
 }
 
-const styles = {
+const drawerStyles = {
 	drawer: {
-		shadowColor: '#000000',
-		shadowOpacity: 0.8,
-		shadowRadius: 3,
+		shadowColor: '#ccc',
+		shadowOpacity: 0.3,
+		shadowRadius: 4,
 		backgroundColor: '#fff',
 	},
-	view: {
-		height: Dimensions.get('window').height,
-	}
 };
 
 const mapStateToProps = (state) => {
@@ -73,7 +67,5 @@ const mapDispatchToProps = (dispatch) => {
 		},
 	};
 };
-
-// export default UserInfoDrawer;
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserInfoDrawer);
