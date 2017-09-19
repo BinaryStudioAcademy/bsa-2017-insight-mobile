@@ -1,8 +1,23 @@
-import io from 'socket.io-client';
+import io from 'socket.io-client/dist/socket.io';
 import { AsyncStorage } from 'react-native';
 import { fetchMessage } from './actions/conversationsActions';
+import { EventRegister } from 'react-native-event-listeners';
 
-function startSocketConnection(dispatch) {
+export function findItemById(id, arrOfObjects) {
+  if (!id || !arrOfObjects) return null;
+  const item = arrOfObjects.find((obj) => {
+    return obj._id === id;
+  });
+  const index = arrOfObjects.findIndex((obj) => {
+    return obj._id === id;
+  });
+  return {
+    item,
+    index,
+  };
+}
+
+export function startSocketConnection(dispatch) {
   this.socket = io(global.insightHost);
   AsyncStorage.getItem('adminId', (err, id) => {
     if (err) {
@@ -19,6 +34,7 @@ function startSocketConnection(dispatch) {
 
   this.socket.on('unreadNewMessage', (message) => {
     dispatch(fetchMessage(message));
+    EventRegister.emitEvent('newMessage');
   });
 
   this.socket.on('newMessage', (message) => {
@@ -30,7 +46,9 @@ function startSocketConnection(dispatch) {
     } else {
       dispatch(fetchMessage(message));
     }
+    EventRegister.emitEvent('newMessage');
   });
+
   this.socket.on('newConversationCreated', () => {
     this.props.getAllConversations();
   });

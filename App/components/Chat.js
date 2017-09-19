@@ -17,6 +17,8 @@ import { getAllConversations } from '../actions/conversationsActions';
 import { Actions } from 'react-native-router-flux';
 import MessagesList from './MessagesList';
 import UserInfoDrawer from './UserInfoDrawer';
+import { startSocketConnection, findItemById } from './../startSocketConnections';
+import { EventRegister } from 'react-native-event-listeners';
 
 class Chat extends Component {
   constructor(props) {
@@ -32,10 +34,12 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    const conversation = this.props.conversationToRender;
-    this.props.socketConnection.emit('switchRoom', conversation._id);
-    this.props.socketConnection.emit('messagesReceived', { type: 'Admin', messages: conversation.messages });
-    this.props.dispatch(getAllConversations());
+    this.props.socketConnection.emit('switchRoom', this.props.conversationToRender._id);
+    this.props.socketConnection.emit('adminConnectedToRoom', this.props.conversationToRender._id);
+    this.props.socketConnection.emit('messagesReceived', { type: 'Admin', messages: this.props.conversationToRender.messages });
+    EventRegister.addEventListener('newMessage', () => {
+      this.setState({ conversationToRender: findItemById(this.props.conversationToRender._id, this.props.conversations) });
+    });
   }
 
   onMessageInputChange(text) {

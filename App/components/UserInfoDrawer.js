@@ -20,10 +20,6 @@ class UserInfoDrawer extends Component {
 		this.props.getUserStatistics(this.props.userId);
 	}
 
-	componentWillReceiveProps(nextProps) {
-		console.log(nextProps);
-	}
-
 	render() {
 		return (
 			<Drawer

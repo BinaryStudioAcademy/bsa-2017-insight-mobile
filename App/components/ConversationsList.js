@@ -15,7 +15,7 @@ import {
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { getAllConversations } from './../actions/conversationsActions';
-import startSocketConnection from './../startSocketConnections';
+import { findItemById, startSocketConnection } from './../startSocketConnections';
 
 class ConversationsList extends Component {
   constructor(props) {
@@ -44,6 +44,7 @@ class ConversationsList extends Component {
       adminId: this.adminId,
       isConversationPicked,
       dispatch: this.props.dispatch,
+      conversations: this.props.conversations,
     });
   }
 
