@@ -1,4 +1,4 @@
-package com.firstnativeproject;
+package com.insightmessenger;
 
 import com.facebook.react.ReactActivity;
 
@@ -14,7 +14,7 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "firstNativeProject";
+        return "InSightmessenger";
     }
     
     @Override

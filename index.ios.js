@@ -14,4 +14,4 @@ import {
 import App from './App/app';
 
 
-AppRegistry.registerComponent('firstNativeProject', () => App);
+AppRegistry.registerComponent('InSightmessenger', () => App);

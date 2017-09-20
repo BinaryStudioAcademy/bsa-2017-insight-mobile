@@ -17,4 +17,4 @@ console.ignoredYellowBox = [
     'Setting a timer',
 ];
 
-AppRegistry.registerComponent('firstNativeProject', () => App);
+AppRegistry.registerComponent('InSightmessenger', () => App);

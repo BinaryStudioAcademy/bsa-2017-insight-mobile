@@ -1,4 +1,4 @@
-package com.firstnativeproject;
+package com.insightmessenger;
 
 import android.app.Application;
 
