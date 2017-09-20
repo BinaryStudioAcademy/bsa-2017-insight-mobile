@@ -5,6 +5,8 @@ import {
   Image,
   View,
   TouchableHighlight,
+  Button,
+  Linking,
 } from 'react-native';
 import propTypes from 'prop-types';
 
@@ -14,19 +16,23 @@ const Message = ({ name, body, type }) => {
   let message;
   if (bodyIsLink) {
     if (body.isImage) {
-      message = (
-        <a href={body.path} target="_blank">
-          <img className={styles['message-body-image']} src={body.path} alt={body.fileName} />
-        </a>);
+      message = <Image
+        source={{ uri: body.path }}
+        alt={body.fileName}
+        style={{width: 150, height: 150}}
+      />;
     } else {
-      message = <a href={body.path}>{body.fileName}.{body.fileType}</a>;
+      message = <Button
+        onPress={Linking.openURL(body.path).catch(err => console.error('An error occurred', err))}
+        title={`${body.fileName}.${body.fileType}`}
+        />;
     }
   } else {
-    message = <Text>{body}</Text>;
+    message = <Text style={styles.message}>{body}</Text>;
   }
   return (
     <View style={{ ...styles.container, alignSelf: messageAlign }}>
-      <Text style={styles.message}>{message}</Text>
+      <View>{message}</View>
       <Text style={styles.author}>{name}</Text>
     </View>
   );
@@ -40,7 +46,7 @@ const styles = {
     marginTop: 10,
   },
   message: {
-    width: '100%',
+    // maxWidth: '80%',
     fontSize: 16,
   },
   author: {

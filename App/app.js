@@ -21,12 +21,18 @@ const App = () => {
       <Router>
         <Scene key="root">
           <Scene key="splash-screen" component={SplashScreen} hideNavBar initial />
-          <Scene key="login" component={Login} title="Login Page" hideNavBar />
+          <Scene key="login"
+            component={Login}
+            title="Login Page"
+            hideNavBar
+            panHandlers={null}
+          />
           <Scene
             key="conversations-list"
             component={ConversationsList}
             title="Conversations List"
             hideNavBar
+            panHandlers={null}
           />
           <Scene
             key="chat"

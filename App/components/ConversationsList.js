@@ -156,6 +156,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  authorName: {
+    fontSize: 12,
+    fontStyle: 'italic',
+    color: '#666',
+  },
   message: {
     position: 'absolute',
     width: 300,

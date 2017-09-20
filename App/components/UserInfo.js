@@ -33,10 +33,12 @@ class UserInfo extends Component {
 							{ title: 'OS', info: statistic.os },
 							{ title: 'Screen', info: screen },
 						]}
+						keyExtractor={item => item.title}
 						renderItem={(data) => {
 							if (data.item.info) {
-								return (<View style={styles.listItem} key={data.item.title}>
-									<Text style={styles.listItemTitle}>{data.item.title}</Text><Text>{data.item.info}</Text>
+								return (<View style={styles.listItem}>
+									<Text style={styles.listItemTitle}>{data.item.title}</Text>
+									<Text>{data.item.info}</Text>
 								</View>);
 							}
 						}}
