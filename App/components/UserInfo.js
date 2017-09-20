@@ -51,7 +51,8 @@ class UserInfo extends Component {
 const styles = StyleSheet.create({
 	view: {
 		height: Dimensions.get('window').height,
-		padding: 10,
+		paddingHorizontal: 10,
+		marginVertical: 10,
 	},
 	listItem: {
 		borderBottomWidth: 1,

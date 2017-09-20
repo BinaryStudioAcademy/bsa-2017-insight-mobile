@@ -43,7 +43,8 @@ class MessagesList extends React.Component {
 const styles = StyleSheet.create({
   messagesList: {
     flex: 10,
-    padding: 10,
+    // marginVertical: 10,
+    paddingLeft: 10,
     paddingRight: 12,
   },
 });

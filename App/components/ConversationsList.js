@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     // position: 'absolute',
     // right: 10,
     // top: 0,
-    marginVertical: 0,
+    // marginVertical: 0,
     marginRight: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,
