@@ -163,7 +163,8 @@ const styles = StyleSheet.create({
   },
   message: {
     position: 'absolute',
-    width: 300,
+    // width: 300,
+    width: '100%',
     bottom: 0,
     fontSize: 16,
   },

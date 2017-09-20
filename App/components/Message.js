@@ -43,7 +43,7 @@ const styles = {
     padding: 10,
     borderRadius: 10,
     backgroundColor: '#aaa',
-    marginTop: 10,
+    marginBottom: 10,
   },
   message: {
     // maxWidth: '80%',
