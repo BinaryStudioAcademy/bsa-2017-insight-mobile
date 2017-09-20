@@ -19,6 +19,7 @@ import MessagesList from './MessagesList';
 import UserInfoDrawer from './UserInfoDrawer';
 import { startSocketConnection, findItemById } from './../startSocketConnections';
 import { EventRegister } from 'react-native-event-listeners';
+import StatusBarPaddingIOS from 'react-native-ios-status-bar-padding';
 
 class Chat extends Component {
   constructor(props) {
@@ -106,6 +107,7 @@ class Chat extends Component {
     return (
       <UserInfoDrawer userId={user.user._id}>
         <View style={styles.container}>
+          <StatusBarPaddingIOS />
           <View style={styles.conversationHeader}>
             <TouchableHighlight style={styles.backButton} onPress={this.onBackButtonPress} activeOpacity={5}>
               <Image
@@ -113,8 +115,10 @@ class Chat extends Component {
                 style={styles.backButtonImage}
               />
             </TouchableHighlight>
-            <Image source={{ uri: avatar }} style={styles.headerAvatar} />
-            <Text style={styles.username}>{userName}</Text>
+            <View style={styles.user}>
+              <Image source={{ uri: avatar }} style={styles.headerAvatar} />
+              <Text style={styles.username}>{userName}</Text>
+            </View>
             {this.state.isPicked ?
               <View style={styles.pickButton}>
                 <Text style={styles.pickButtonText}>Picked</Text>
@@ -134,12 +138,13 @@ class Chat extends Component {
               style={styles.messageInput}
               value={this.state.text}
               onChangeText={this.onMessageInputChange}
+              placeholder="Your message..."
             />
             <Button
               style={styles.submitButton}
-              onPress={this.onSubmitButtonPress}
-              title="Submit"
-              color="#c0233d"
+              onPress={this.state.isPicked ? this.onSubmitButtonPress : () => undefined}
+              title="Send"
+              color={this.state.isPicked ? '#c0233d' : '#ddd'}
             />
           </View>
         </View>
@@ -153,20 +158,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   conversationHeader: {
-    justifyContent: 'center',
+    width: '100%',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 10,
+    paddingHorizontal: 10,
     backgroundColor: '#c0233d',
     flexDirection: 'row',
   },
   backButton: {
-    position: 'absolute',
-    left: 15,
+    // position: 'absolute',
+    // left: 15,
   },
   backButtonImage: {
     backgroundColor: '#c0233d',
     width: 30,
     height: 30,
+  },
+  user: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   headerAvatar: {
     width: 50,
@@ -182,13 +194,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     flexDirection: 'row',
+    borderTopWidth: Platform.OS === 'ios' ? 1 : 0,
+    backgroundColor: Platform.OS === 'android' ? '#ccc' : 'transparent',
   },
   messageInput: {
     flex: 10,
   },
   pickButton: {
-    position: 'absolute',
-    right: 10,
+    // position: 'absolute',
+    // right: 10,
+    marginVertical: 0,
+    // marginRight: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 5,

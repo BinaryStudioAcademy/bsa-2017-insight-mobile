@@ -12,6 +12,8 @@
     "react-native": "0.48.2",
     "react-native-drawer": "^2.5.0",
     "react-native-event-listeners": "^1.0.3",
+    "react-native-ios-status-bar-padding": "^1.1.0",
+    "react-native-orientation-locker": "^1.0.4",
     "react-native-router-flux": "^4.0.0-beta.21",
     "react-native-vector-icons": "^4.4.0",
     "react-redux": "^5.0.6",

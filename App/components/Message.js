@@ -9,7 +9,7 @@ import {
 import propTypes from 'prop-types';
 
 const Message = ({ name, body, type }) => {
-  const messageAlign = type === 'Admin' ? 'message-item-left' : 'message-item-right';
+  const messageAlign = type === 'Admin' ? 'flex-end' : 'flex-start';
   const bodyIsLink = typeof body === 'object';
   let message;
   if (bodyIsLink) {
@@ -25,11 +25,30 @@ const Message = ({ name, body, type }) => {
     message = <Text>{body}</Text>;
   }
   return (
-    <View>
-      <Text>{message}</Text>
-      <Text>{name}</Text>
+    <View style={{ ...styles.container, alignSelf: messageAlign }}>
+      <Text style={styles.message}>{message}</Text>
+      <Text style={styles.author}>{name}</Text>
     </View>
   );
+};
+
+const styles = {
+  container: {
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: '#aaa',
+    marginTop: 10,
+  },
+  message: {
+    width: '100%',
+    fontSize: 16,
+  },
+  author: {
+    width: '100%',
+    marginTop: 4,
+    fontStyle: 'italic',
+    color: '#fff',
+  },
 };
 
 Message.propTypes = {

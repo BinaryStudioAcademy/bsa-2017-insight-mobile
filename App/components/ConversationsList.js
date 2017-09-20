@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { getAllConversations } from './../actions/conversationsActions';
 import { findItemById, startSocketConnection } from './../startSocketConnections';
+import StatusBarPaddingIOS from 'react-native-ios-status-bar-padding';
 
 class ConversationsList extends Component {
   constructor(props) {
@@ -52,8 +53,9 @@ class ConversationsList extends Component {
     const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
     return (
       <View style={styles.container}>
+        <StatusBarPaddingIOS />
         <View style={styles.header}>
-          <Text style={styles.title}>Conversations list</Text>
+          <Text style={styles.title}>Conversation list</Text>
           <Touchable onPress={this.onLogoutButtonPress}>
             <View style={styles.logoutButton}>
               <Text style={styles.logoutButtonText}>Logout</Text>
@@ -72,24 +74,27 @@ class ConversationsList extends Component {
               passedTime = `${Math.round(parseInt(passedTime, 10) / 60)}h ago`;
               if (parseInt(passedTime, 10) > 24) passedTime = `${Math.round(parseInt(passedTime, 10) / 24)}d ago`;
             }
-            const avatar = lastMessage && (lastMessage.author.item.avatar === 'http://localhost:3001/uploads/avatars/avatar.png' ?
-              `${global.insightHost}/uploads/avatars/avatar.png` :
-              lastMessage.author.item.avatar);
-            return (
-              <TouchableHighlight onPress={() => this.onConversationPress(conversation)}>
-                <View style={styles.conversation}>
-                  <Image source={{ uri: avatar }} style={styles.avatar} />
-                  <View style={styles.authorNameWrapper}>
-                    <Text style={styles.authorName}>{lastMessage.author.item.username}</Text>
-                    <Text style={styles.messageTime}>{passedTime}</Text>
-                    <Text style={styles.message} numberOfLines={1}>
-                      {typeof lastMessage.body === 'object' ?
-                        `${lastMessage.body.fileName}.${lastMessage.body.fileType}` :
-                        lastMessage.body}
-                    </Text>
+            if (lastMessage && lastMessage.author.item) {
+              const avatar = lastMessage
+              && ((lastMessage.author.item.avatar === 'avatar.png' || lastMessage.author.item.avatar === 'http://localhost:3001/uploads/avatars/avatar.png')
+              ? `${global.insightHost}/uploads/avatars/avatar.png`
+              : lastMessage.author.item.avatar);
+              return (
+                <TouchableHighlight onPress={() => this.onConversationPress(conversation)}>
+                  <View style={styles.conversation}>
+                    <Image source={{ uri: avatar }} style={styles.avatar} />
+                    <View style={styles.authorNameWrapper}>
+                      <Text style={styles.authorName}>{lastMessage.author.item.username}</Text>
+                      <Text style={styles.messageTime}>{passedTime}</Text>
+                      <Text style={styles.message} numberOfLines={1}>
+                        {typeof lastMessage.body === 'object' ?
+                          `${lastMessage.body.fileName}.${lastMessage.body.fileType}` :
+                          lastMessage.body}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              </TouchableHighlight>);
+                </TouchableHighlight>);
+            }
           }}
         />
       </View>
@@ -102,7 +107,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    justifyContent: 'flex-start',
+    width: '100%',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 20,
     backgroundColor: '#c0233d',
@@ -114,8 +120,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   logoutButton: {
-    position: 'absolute',
-    right: 10,
+    // position: 'absolute',
+    // right: 10,
+    // top: 0,
+    marginVertical: 0,
+    marginRight: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 5,

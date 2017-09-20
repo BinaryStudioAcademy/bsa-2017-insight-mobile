@@ -20,6 +20,7 @@ class UserInfo extends Component {
 				{user ? <FlatList
 						data={[
 							{ title: 'Username', info: user.username },
+							{ title: 'First Name', info: user.firstName },
 							{ title: 'Location', info: `${statistic.country}, ${statistic.city}` },
 							{ title: 'Timezone', info: statistic.timeZone },
 							{ title: 'Email', info: user.email },
@@ -34,7 +35,7 @@ class UserInfo extends Component {
 						]}
 						renderItem={(data) => {
 							if (data.item.info) {
-								return (<View style={styles.listItem}>
+								return (<View style={styles.listItem} key={data.item.title}>
 									<Text style={styles.listItemTitle}>{data.item.title}</Text><Text>{data.item.info}</Text>
 								</View>);
 							}

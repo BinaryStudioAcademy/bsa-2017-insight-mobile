@@ -13,5 +13,8 @@ import {
 } from 'react-native';
 import App from './App/app';
 
+console.ignoredYellowBox = [
+    'Setting a timer',
+];
 
 AppRegistry.registerComponent('firstNativeProject', () => App);

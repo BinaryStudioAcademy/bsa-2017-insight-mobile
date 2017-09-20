@@ -4,6 +4,7 @@ import {
   Text,
   Image,
   View,
+  ScrollView,
   TouchableHighlight,
 } from 'react-native';
 import propTypes from 'prop-types';
@@ -17,16 +18,23 @@ class MessagesList extends React.Component {
   render() {
     return (
       <View style={styles.messagesList}>
-        {this.props.messages && this.props.messages.map((message) => {
-          return (
-            <Message
-              key={message._id}
-              body={message.body}
-              name={message.author.item.firstName || message.author.item.username}
-              type={message.author.userType}
-            />
-          );
-        })}
+        <ScrollView
+          ref={ref => this.scrollView = ref}
+          onContentSizeChange={(contentWidth, contentHeight)=>{
+              this.scrollView.scrollToEnd({animated: true});
+          }}
+        >
+          {this.props.messages && this.props.messages.map((message) => {
+            return (
+              <Message
+                key={message._id}
+                body={message.body}
+                name={message.author.item.firstName || message.author.item.username}
+                type={message.author.userType}
+              />
+            );
+          })}
+        </ScrollView>
       </View>
     );
   }
@@ -34,8 +42,9 @@ class MessagesList extends React.Component {
 
 const styles = StyleSheet.create({
   messagesList: {
-    flex: 6,
-    padding: 5,
+    flex: 10,
+    padding: 10,
+    paddingRight: 12,
   },
 });
 

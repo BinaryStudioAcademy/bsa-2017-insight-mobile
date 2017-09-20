@@ -8,12 +8,14 @@ import ConversationsList from './components/ConversationsList';
 import Chat from './components/Chat';
 import Login from './components/Login';
 import SplashScreen from './components/SplashScreen';
+import Orientation from 'react-native-orientation-locker';
 
 sagaMiddleware.run(rootSaga);
 
 global.insightHost = Platform.OS === 'android' ? 'http://10.0.2.2:3001' : 'http://localhost:3001';
 
 const App = () => {
+  Orientation.lockToPortrait();
   return (
     <Provider store={store}>
       <Router>
